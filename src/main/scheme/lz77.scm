@@ -15,15 +15,22 @@
 
 ;; -- begin decompress helpers
 
-(define (lz77-decompress-main decoded pos data)
+(define (lz77-decompress-main pos data)
   (let* ([c (string-ref data pos)])
-        (if (not (lz77-reference-prefix? c))
-            (string-append decoded c)
+        (if (lz77-reference-prefix? c)
+            (string-append c
+              (lz77-decompress-main (+ pos 1) data))
             (string-append decoded
-              (lz77-decompress-main-tmp pos data)))))
+              (lz77-decompress-main-tmp decoded pos data)))))
 
 
-(define (lz77-decompress-main-tmp pos data)
+; TODO None of these guard when making their tail call
+(define (lz77-decompress-main-tmp decoded pos data)
+  (let* ([n (string-ref data (+ pos 1))])
+        (if (lz77-reference-prefix? c)
+            (string-append lz77-reference-prefix
+              (lz77-decompress-main (+ pos 2) data))
+            (string-append (
 
 
 
